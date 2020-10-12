@@ -4,36 +4,32 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.os.Build;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import androidx.core.content.ContextCompat;
 
-public class MainActivity extends Activity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends Activity implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {
 
     private final static String[] FROM_COLUMNS = {
-            Build.VERSION.SDK_INT
-                    >= Build.VERSION_CODES.HONEYCOMB ?
-                    ContactsContract.Contacts.DISPLAY_NAME_PRIMARY :
-                    ContactsContract.Contacts.DISPLAY_NAME
+            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
     };
 
-    private static final String[] PROJECTION =
-            {
-                    ContactsContract.Contacts._ID,
-                    ContactsContract.Contacts.LOOKUP_KEY,
-                    Build.VERSION.SDK_INT
-                            >= Build.VERSION_CODES.HONEYCOMB ?
-                            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY :
-                            ContactsContract.Contacts.DISPLAY_NAME
-            };
+    private static final String[] PROJECTION = {
+            ContactsContract.Contacts._ID,
+            ContactsContract.Contacts.LOOKUP_KEY,
+            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
+    };
 
     private final static int[] TO_IDS = {
             android.R.id.text1
@@ -54,7 +50,7 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
             readContacts();
         } else {
-            requestPermissions(new String[] { Manifest.permission.READ_CONTACTS }, 0);
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, 0);
         }
     }
 
@@ -72,6 +68,8 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
         contactsList.setAdapter(cursorAdapter);
 
         getLoaderManager().initLoader(0, null, this);
+
+        contactsList.setOnItemClickListener(this);
     }
 
     @Override
@@ -95,5 +93,17 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         cursorAdapter.swapCursor(null);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Cursor cursor = cursorAdapter.getCursor();
+        cursor.moveToPosition(position);
+        long contactId = cursor.getLong(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+        openDetailsActivity(contactId);
+    }
+
+    private void openDetailsActivity(long contactId) {
+        // TODO open DetailsActivity
     }
 }
