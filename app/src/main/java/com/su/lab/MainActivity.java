@@ -4,11 +4,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
-import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.View;
@@ -104,6 +102,10 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
     }
 
     private void openDetailsActivity(long contactId) {
-        // TODO open DetailsActivity
+        /*
+         * TODO #1 Реализовать открытие DetailsActivity через Intent
+         *  https://developer.android.com/training/basics/firstapp/starting-activity
+         *  и передать contactId через extra
+         */
     }
 }
