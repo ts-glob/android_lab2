@@ -15,9 +15,12 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 public class MainActivity extends Activity implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {
+
+    private final static int READ_CONTACTS_PERMISSION_CODE = 123;
 
     private final static String[] FROM_COLUMNS = {
             ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
@@ -25,7 +28,6 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
 
     private static final String[] PROJECTION = {
             ContactsContract.Contacts._ID,
-            ContactsContract.Contacts.LOOKUP_KEY,
             ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
     };
 
@@ -44,11 +46,22 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
         checkReadContactsPermission();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == READ_CONTACTS_PERMISSION_CODE) {
+            if (grantResults.length > 0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                readContacts();
+            }
+        }
+    }
+
     private void checkReadContactsPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
             readContacts();
         } else {
-            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, 0);
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, READ_CONTACTS_PERMISSION_CODE);
         }
     }
 
