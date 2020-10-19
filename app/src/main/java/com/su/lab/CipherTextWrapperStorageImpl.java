@@ -22,7 +22,6 @@ public class CipherTextWrapperStorageImpl implements CipherTextWrapperStorage {
         editor.putString(PIN_KEY, wrapper.getCipherText());
         editor.putString(PIN_IV_KEY, wrapper.getInitializationVector());
         editor.commit();
-        asdfasdfasdf
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -17,6 +18,9 @@ import android.widget.SimpleCursorAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
+import static com.su.lab.DetailsActivity.CONTACT_ID_EXTRA;
 
 public class MainActivity extends Activity implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {
 
@@ -120,5 +124,8 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
          *  https://developer.android.com/training/basics/firstapp/starting-activity
          *  и передать contactId через extra
          */
+        Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
+        intent.putExtra(CONTACT_ID_EXTRA, contactId);
+        startActivity(intent);
     }
 }
